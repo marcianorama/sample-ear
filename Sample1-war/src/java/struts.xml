@@ -1,0 +1,50 @@
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+<!--    <constant name="struts.ognl.logMissingProperties" value="false" />
+    <constant name="struts.custom.i18n.resources" value="doku/riskengine/edu/locale/globalMessages" />
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/> -->
+    <!-- Configuration for the default package. -->
+    <package name="default" extends="struts-default,json-default" >
+<!--        <interceptors>
+            <interceptor name="bsploginAuthenticationInterceptor" class="doku.riskengine.edu.interceptor.LoginAuthInterceptor"/>
+            <interceptor name="bspcachingHeaderInterceptor" class="doku.riskengine.edu.interceptor.CachingHeaderInterceptor"/>
+            <interceptor name="bspRedirectMsgInterceptor" class="doku.riskengine.edu.interceptor.RedirectMsgInterceptor"/>
+            <interceptor name="reTimerInterceptor" class="doku.riskengine.edu.interceptor.DokuTimerInterceptor"/>
+            <interceptor-stack name="toolsStack">
+                MANDATORI 
+                <interceptor-ref name="paramsPrepareParamsStack"/>
+                
+
+                OPTIONAL 
+                <interceptor-ref name="bsploginAuthenticationInterceptor"/>
+                <interceptor-ref name="bspcachingHeaderInterceptor"/>
+                <interceptor-ref name="bspRedirectMsgInterceptor"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="toolsStack"/>-->
+        
+<!--        <global-results>
+            <result name="authentication_required" type="redirect">/Login.html</result>
+            <result name="info_another_login" type="redirect">/TimeOut.html</result>
+            <result name="privilege_required" type="redirectAction">Unauthorized</result>
+            <result name="index" type="redirect">/index.jsp</result>
+            <result name="page_process">/PageProcess.jsp</result>
+            <result name="self_close">/self_close.jsp</result>
+            <result name="invalid.token" type="redirectAction">InvalidToken</result>
+            <result name="change_password_required" type="redirectAction">ChangePasswordAction_form</result>
+        </global-results>-->
+
+        <action name="LoginAction_*" method="{1}" class="com.sample.action.LoginAction">
+            <!--<interceptor-ref name="paramsPrepareParamsStack"/>-->
+            <!--<interceptor-ref name="toolsStack"/>-->
+            <result name="success" type="freemarker">/pages/auth/{1}.html</result>
+            <result name="failed" type="freemarker">/pages/auth/${previousPage}.html</result>
+            <result name="redirect" type="redirect">${mappedRequest}</result>
+            <result name="logout" type="redirect">/Login.html</result>
+        </action>
+    </package>
+</struts>
