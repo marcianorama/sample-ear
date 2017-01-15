@@ -5,6 +5,7 @@
 package com.sample.executor;
 
 import com.sample.dto.Users;
+import com.sample.helper.RequestHelper;
 import javax.ejb.Local;
 
 /**
@@ -14,4 +15,5 @@ import javax.ejb.Local;
 @Local
 public interface QueryExecutorLocal {
     public Users getUsersExist(String email);
+    public Users createUser(RequestHelper requestHelper);
 }

@@ -12,6 +12,7 @@ import com.sample.helper.RequestHelper;
 import com.sample.helper.UsersHelper;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  *
@@ -20,6 +21,7 @@ import javax.ejb.EJB;
 public class LoginAction extends EsapiAction implements Preparable, ValidationAware {
     private RequestHelper requestHelper = null;
     private String mappedRequest = "";
+    private final static Logger log = Logger.getLogger(LoginAction.class.getName());
     @EJB
     private QueryExecutorLocal queryExecutorLocal;
 
@@ -32,6 +34,14 @@ public class LoginAction extends EsapiAction implements Preparable, ValidationAw
     public String login() {
         String result = "";
         try {
+            Users users = queryExecutorLocal.getUsersExist(requestHelper.getUserHelper().getEmail().trim());
+            if(requestHelper.getUserHelper().getEmail()!=null && !requestHelper.getUserHelper().getEmail().trim().equals("")){
+                if(users.getEmail().equals(requestHelper.getUserHelper().getEmail().trim()) && users.getPassword().equals(DigestUtils.md5Hex(requestHelper.getUserHelper().getPassword().trim()))){
+                    log.info(". : : LOGIN SUCCESS : : .");
+                }else{
+                    log.info(". : : LOGIN FAILED : : .");
+                }
+            }
             result = "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,14 +51,13 @@ public class LoginAction extends EsapiAction implements Preparable, ValidationAw
 
     public String submitRegister() {
         String result = "";
-        try {
-            System.out.println("email -> "+requestHelper.getUserHelper().getEmail().trim());
-                    
+        try {       
             Users users = queryExecutorLocal.getUsersExist(requestHelper.getUserHelper().getEmail().trim());
             if (users != null) {
-                System.out.println("Users found");
+                log.info(">>> Users Exist!!!");
             } else {
-                System.out.println("Users Not Found");
+                queryExecutorLocal.createUser(requestHelper);
+                log.info(">>>> Create User Success");
             }
             setMappedRequest("LoginAction_login.tes");
             result = "redirect";
